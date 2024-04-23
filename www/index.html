@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <!-- RUTAS, RECUERDA AGREGAR LAS RUTAS CORRECTAMENTE  -->
+        <script src="controllers/routes.js"></script> 
+        <!-- CONTROLADOR DE USUARIOS -->
+        <script src="controllers/Users_Controller.js"></script>
+        <!-- JQUERY, INSTALA JQUERY EN CONSOLA, ABRE LA CARPETA DEL PROYECTO CON 'cd' POSTERIORMENT EJECUTA 'npm i jquery' -->
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <title>Hello World</title>
+    </head>
+    <body>
+        <div class="app">
+            <div>
+                <h1> Get All Users</h1>
+            <ul class="users">
+
+            </ul> 
+            <!-- BOTON PARA CONSEGUIR TODOS LOS USUARIOS -->
+            <button onclick="getAllUsers()">TODOS LOS USUARIOS</button>
+        </div>
+        <div>
+            <h1>Create a new user</h1>
+            <form method="post">
+                <label for="fullname">Full Name:</label><br>
+                <input type="text" id="fullname" name="fullname"><br>
+            
+                <label for="title">Title:</label><br>
+                <input type="text" id="title" name="title"><br>
+            
+                <label for="location">Location:</label><br>
+                <input type="text" id="location" name="location"><br>
+            
+                <label for="description">Description:</label><br>
+                <textarea id="description" name="description"></textarea><br>
+            
+                <label for="availability">Availability:</label><br>
+                <input type="text" id="availability" name="availability"><br><br>
+                <button type="button" class="submit" onclick="validateAndExecute()">Submit</button>
+            </form>
+
+            <script>
+                //FUNCION PARA VALIDAR Y EJECUTAR
+                function validateAndExecute() {
+                    var fullnameInput = document.getElementById('fullname').value.trim();
+                    var titleInput = document.getElementById('title').value.trim();
+                    var locationInput = document.getElementById('location').value.trim();
+                    var descriptionInput = document.getElementById('description').value.trim();
+                    var availabilityInput = document.getElementById('availability').value.trim();
+                  
+                    if (fullnameInput !== '' && titleInput !== '' && locationInput !== '' && descriptionInput !== '' && availabilityInput !== '') {
+                        
+                        // Capture values from the form
+                        var fullname = $('#fullname').val();
+                        var title = $('#title').val();
+                        var location = $('#location').val();
+                        var description = $('#description').val();
+                        var availability = $('#availability').val();
+                  
+                        // Construct the object with form data
+                        var formData = {
+                            Fullname: fullname,
+                            Title: title,
+                            Location: location,
+                            Description: description,
+                            Availability: availability
+                        };
+                  
+                        submit(formData);
+                    } else {
+                      alert("Please fill in all fields.");
+                    }
+                  }                  
+            </script>
+        </div>
+        <div>
+            <h1>Edit a user</h1>
+            <!-- RECUERDA CAMBIAR LOS ID EN EL FORMULARIO DE EDIT -->  
+            <form id="editForm">
+                <label for="Id_User">Id_User:</label><br>
+                <input type="text" value="" Id="Id_Usera" name="Id_User"><br>
+                <label for="fullname">Full Name:</label><br>
+                <input type="text" value="" id="fullnamea" name="fullname"><br>
+            
+                <label for="title">Title:</label><br>
+                <input type="text" value="" id="titlea" name="title"><br>
+            
+                <label for="location">Location:</label><br>
+                <input type="text" value="" id="locationa" name="location"><br>
+            
+                <label for="description">Description:</label><br>
+                <textarea id="descriptiona" value="" name="description"></textarea><br>
+            
+                <label for="availability">Availability:</label><br>
+                <input type="text" id="availabilitya" name="availability"><br><br>
+                <button type="button" value="" class="edit">Edit</button>
+            </form>
+        </div>
+        <script>
+            //FUNCION PARA VALIDAR Y EJECUTAR EDIT
+            $('.edit').on('click', function() {
+                var Id_User = $('#Id_Usera').val();
+                var fullname = $('#fullnamea').val();
+                var title = $('#titlea').val();
+                var location = $('#locationa').val();
+                var description = $('#descriptiona').val();
+                var availability = $('#availabilitya').val();
+        
+                var formData = {
+                    Id_User: parseInt(Id_User), //RECUERDA "parseInt" ES PARA CONVERTIR ESE VALOR EN ENTERO, SOLO UTILIZAR EN VALORES QUE SON ENTEROS EN LA BASE DE DATOS
+                    Fullname: fullname,
+                    Title: title,
+                    Location: location,
+                    Description: description,
+                    Availability: availability
+                };
+        //EJECUTAR EDITUSER FUNCTION, UTILIZA EL ID QUE HAS INGRESADO JUNTO A LA INFORMACION GUARDAD EN FORMDATA
+                editUser(Id_User, formData);
+            });
+//EDIT USER FUNCTION        
+            function editUser(id, formData) {
+                $.ajax({
+                    url: EditUser_route + id,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        console.table(response);
+                        console.log("EDITADO");
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                    }
+                });
+            }
+        </script>
+        
+        </div>
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script>
+    </body>
+</html>
